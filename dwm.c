@@ -399,13 +399,40 @@ arrange(Monitor *m)
 		arrangemon(m);
 }
 
+// void
+// arrangemon(Monitor *m)
+// {
+// 	strncpy(m->ltsymbol, m->lt[m->sellt]->symbol, sizeof m->ltsymbol);
+// 	if (m->lt[m->sellt]->arrange)
+// 		m->lt[m->sellt]->arrange(m);
+// }
 void
-arrangemon(Monitor *m)
-{
-	strncpy(m->ltsymbol, m->lt[m->sellt]->symbol, sizeof m->ltsymbol);
-	if (m->lt[m->sellt]->arrange)
-		m->lt[m->sellt]->arrange(m);
-}
+ arrangemon(Monitor *m)
+ {
+	int n = 0;
+	Client *c;
+ 	strncpy(m->ltsymbol, m->lt[m->sellt]->symbol, sizeof m->ltsymbol);
+	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
+	if ((m->lt[m->sellt]->arrange != monocle && n > 1) || !m->lt[m->sellt]->arrange) {
+		for (c = m->clients; c; c = c->next) {
+			if (ISVISIBLE(c) && (!m->lt[m->sellt]->arrange || !c->isfloating) && (c->bw != borderpx)) {
+				c->oldbw = c->bw;
+				c->bw = borderpx;
+				resizeclient(c, m->wx, m->wy, m->ww - (2 * c->bw), m->wh - (2 * c->bw));
+			}
+		}
+		if (m->lt[m->sellt]->arrange) {
+			m->lt[m->sellt]->arrange(m);
+		}
+	} else {
+		monocle(m);
+	}
+ }
+
+
+
+
+
 
 void
 attach(Client *c)
@@ -1108,6 +1135,21 @@ maprequest(XEvent *e)
 		manage(ev->window, &wa);
 }
 
+// void
+// monocle(Monitor *m)
+// {
+// 	unsigned int n = 0;
+// 	Client *c;
+
+// 	for (c = m->clients; c; c = c->next)
+// 		if (ISVISIBLE(c))
+// 			n++;
+// 	if (n > 0) /* override layout symbol */
+// 		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n);
+// 	for (c = nexttiled(m->clients); c; c = nexttiled(c->next))
+// 		resize(c, m->wx, m->wy, m->ww - 2 * c->bw, m->wh - 2 * c->bw, 0);
+// }
+
 void
 monocle(Monitor *m)
 {
@@ -1117,11 +1159,23 @@ monocle(Monitor *m)
 	for (c = m->clients; c; c = c->next)
 		if (ISVISIBLE(c))
 			n++;
-	if (n > 0) /* override layout symbol */
+	if (n > 0 && m->lt[m->sellt]->arrange == monocle) /* override layout symbol */
 		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n);
-	for (c = nexttiled(m->clients); c; c = nexttiled(c->next))
-		resize(c, m->wx, m->wy, m->ww - 2 * c->bw, m->wh - 2 * c->bw, 0);
+	for(c = nexttiled(m->clients); c; c = nexttiled(c->next)) {
+		// I'm not sure, but calling resize with the border width subtractions
+		// fixes a glitch where windows would not redraw until they were
+		// manually resized after restarting dwm.
+		resize(c, m->wx, m->wy, m->ww - (2 * c->bw), m->wh - (2 * c->bw), False);
+		if (c->bw) {
+			c->oldbw = c->bw;
+			c->bw = 0;
+			resizeclient(c, m->wx, m->wy, m->ww, m->wh);
+		}
+	}
 }
+
+
+
 
 void
 motionnotify(XEvent *e)
@@ -1714,6 +1768,20 @@ togglebar(const Arg *arg)
 	arrange(selmon);
 }
 
+// void
+// togglefloating(const Arg *arg)
+// {
+// 	if (!selmon->sel)
+// 		return;
+// 	if (selmon->sel->isfullscreen) /* no support for fullscreen windows */
+// 		return;
+// 	selmon->sel->isfloating = !selmon->sel->isfloating || selmon->sel->isfixed;
+// 	if (selmon->sel->isfloating)
+// 		resize(selmon->sel, selmon->sel->x, selmon->sel->y,
+// 			selmon->sel->w, selmon->sel->h, 0);
+// 	arrange(selmon);
+// }
+
 void
 togglefloating(const Arg *arg)
 {
@@ -1723,10 +1791,18 @@ togglefloating(const Arg *arg)
 		return;
 	selmon->sel->isfloating = !selmon->sel->isfloating || selmon->sel->isfixed;
 	if (selmon->sel->isfloating)
+	if (selmon->sel->isfloating) {
+		if (selmon->sel->bw != borderpx) {
+			selmon->sel->oldbw = selmon->sel->bw;
+			selmon->sel->bw = borderpx;
+		}
 		resize(selmon->sel, selmon->sel->x, selmon->sel->y,
-			selmon->sel->w, selmon->sel->h, 0);
+		       selmon->sel->w - selmon->sel->bw * 2, selmon->sel->h - selmon->sel->bw * 2, 0);
+	}
 	arrange(selmon);
 }
+
+
 
 void
 toggletag(const Arg *arg)
