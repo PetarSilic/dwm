@@ -71,40 +71,51 @@ static const char *nautilus[]  = { "/usr/bin/nautilus", NULL };
 static const char *appfinder[]  = { "/usr/bin/xfce4-appfinder", NULL };
 static const char *mydwmquit[]  = { "/home/Petar/.dwmquit", NULL };
 
+static const char *runchromium[]  = { 	"/usr/bin/chromium-browser", NULL };
+static const char *runfirefox[]  = { 	"/usr/bin/firefox", NULL };
+static const char *runopera[]  = { 		"/usr/bin/opera", NULL };
+//static const char *runnautilus[]  = { 	"/usr/bin/nautilus", NULL };
+
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_r,      	spawn,          {.v = dmenucmd } },
-	{ MODKEY,			            XK_Return,	spawn,          {.v = termcmd } },
+	{ MODKEY,                       XK_r,      		spawn,          {.v = dmenucmd } },
+	{ MODKEY,			            XK_Return,		spawn,          {.v = termcmd } },
 
-	{ MODKEY,			            XK_e, 		spawn,          {.v = nautilus } },
-	{ 0,			            	0x1008ff13,	spawn,          {.v = sndup } },
-	{ 0,			            	0x1008ff11,	spawn,          {.v = snddown } },
-	{ MODKEY,			            XK_F2,		spawn,          {.v = appfinder } },
+	{ MODKEY,			            XK_e, 			spawn,          {.v = nautilus } },
+	{ 0,			            	0x1008ff13,		spawn,          {.v = sndup } },
+	{ 0,			            	0x1008ff11,		spawn,          {.v = snddown } },
+	{ MODKEY,			            XK_F2,			spawn,          {.v = appfinder } },
 
-	{ MODKEY,             			XK_q,      	spawn,          {.v = mydwmquit }}, 
+	{ MODKEY,             			XK_q,      		spawn,          {.v = mydwmquit }}, 
+
+	{ MODKEY,             			XK_KP_End,		spawn,          {.v = runchromium }}, 
+	{ MODKEY,             			XK_KP_Down, 	spawn,          {.v = runfirefox }}, 
+	{ MODKEY,             			XK_KP_Page_Down,spawn,          {.v = runopera }}, 
+	//{ MODKEY,             			XK_KP_Home,		spawn,          {.v = runnautilus }}, 
 
 
-	{ MODKEY,                       XK_b,      	togglebar,      {0} },
-	{ Mod1Mask,                     XK_Tab,     focusstack,     {.i = +1 } },
-	{ MODKEY,                       XK_k,      	focusstack,     {.i = -1 } },
-	{ MODKEY,                       XK_Up,     	incnmaster,     {.i = +1 } },
-	{ MODKEY,                       XK_Down,   	incnmaster,     {.i = -1 } },
-	{ MODKEY,                       XK_Left,   	setmfact,       {.f = -0.05} },
-	{ MODKEY,                       XK_Right,  	setmfact,       {.f = +0.05} },
-	{ MODKEY,                       XK_s, 		zoom,           {0} },
-	{ MODKEY,                       XK_y,    	view,           {0} },
-	{ MODKEY,             			XK_Page_Up,	killclient,     {0} },
-	{ MODKEY,                       XK_Insert, 	setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_f,      	setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,                       XK_Home,   	setlayout,      {.v = &layouts[2]} },
-	{ MODKEY,                       XK_space,  	setlayout,      {0} },
-	{ MODKEY|ShiftMask,             XK_space,  	togglefloating, {0} },
-	{ MODKEY,                       XK_0,      	view,           {.ui = ~0 } },
-	{ MODKEY|ShiftMask,             XK_0,      	tag,            {.ui = ~0 } },
-	{ MODKEY,                       XK_comma,  	focusmon,       {.i = -1 } },
-	{ MODKEY,                       XK_period, 	focusmon,       {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_comma,  	tagmon,         {.i = -1 } },
-	{ MODKEY|ShiftMask,             XK_period, 	tagmon,         {.i = +1 } },
+	{ MODKEY,                       XK_b,      		togglebar,      {0} },
+	{ Mod1Mask,                     XK_Tab,     	focusstack,     {.i = +1 } },
+	{ MODKEY,                       XK_k,      		focusstack,     {.i = -1 } },
+	{ MODKEY,                       XK_Up,     		incnmaster,     {.i = +1 } },
+	{ MODKEY,                       XK_Down,   		incnmaster,     {.i = -1 } },
+	{ MODKEY,                       XK_Left,   		setmfact,       {.f = -0.05} },
+	{ MODKEY,                       XK_Right,  		setmfact,       {.f = +0.05} },
+	{ MODKEY,                       XK_s, 			zoom,           {0} },
+	{ MODKEY,                       XK_y,    		view,           {0} },
+	{ MODKEY,             			XK_KP_Page_Up,	killclient,     {0} },
+	{ MODKEY,                       XK_KP_Left, 	setlayout,      {.v = &layouts[0]} },
+	{ MODKEY,                       XK_KP_Right, 	setlayout,      {.v = &layouts[0]} },
+	{ MODKEY,                       XK_f,      		setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,                       XK_KP_Begin,   	setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,                       XK_space,  		setlayout,      {0} },
+	{ MODKEY|ShiftMask,             XK_space,  		togglefloating, {0} },
+	{ MODKEY,                       XK_0,      		view,           {.ui = ~0 } },
+	{ MODKEY|ShiftMask,             XK_0,      		tag,            {.ui = ~0 } },
+	{ MODKEY,                       XK_comma,  		focusmon,       {.i = -1 } },
+	{ MODKEY,                       XK_period, 		focusmon,       {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_comma,  		tagmon,         {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_period, 		tagmon,         {.i = +1 } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
