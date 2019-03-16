@@ -65,8 +65,8 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-b", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "gnome-terminal", NULL };
-static const char *sndup[]  = { "/home/Petar/s/up", NULL };
-static const char *snddown[]  = { "/home/Petar/s/down", NULL };
+static const char *sndup[]  = { "/home/Petar/code/scripts/snd/up", NULL };
+static const char *snddown[]  = { "/home/Petar/code/scripts/snd/down", NULL };
 static const char *nautilus[]  = { "/usr/bin/nautilus", NULL };
 static const char *appfinder[]  = { "/usr/bin/xfce4-appfinder", NULL };
 static const char *mydwmquit[]  = { "/home/Petar/.dwmquit", NULL };
@@ -79,7 +79,8 @@ static const char *runopera[]  = { 		"/usr/bin/opera", NULL };
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_r,      		spawn,          {.v = dmenucmd } },
-	{ MODKEY,			            XK_Return,		spawn,          {.v = termcmd } },
+	//{ MODKEY,			            XK_Return,		spawn,          {.v = termcmd } },
+	{ MODKEY,			            XK_c,			spawn,          {.v = termcmd } },
 
 	{ MODKEY,			            XK_e, 			spawn,          {.v = nautilus } },
 	{ 0,			            	0x1008ff13,		spawn,          {.v = sndup } },
@@ -104,10 +105,11 @@ static Key keys[] = {
 	{ MODKEY,                       XK_s, 			zoom,           {0} },
 	{ MODKEY,                       XK_y,    		view,           {0} },
 	{ MODKEY,             			XK_KP_Page_Up,	killclient,     {0} },
-	{ MODKEY,                       XK_KP_Left, 	setlayout,      {.v = &layouts[0]} },
+	{ MODKEY,                       XK_t, 			setlayout,      {.v = &layouts[0]} },
+	{ MODKEY,                       XK_BackSpace, 	setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_KP_Right, 	setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      		setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,                       XK_KP_Begin,   	setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,                       XK_Return,   	setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                       XK_space,  		setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  		togglefloating, {0} },
 	{ MODKEY,                       XK_0,      		view,           {.ui = ~0 } },
