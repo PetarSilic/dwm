@@ -90,6 +90,7 @@ struct Client {
 	char name[256];
 	float mina, maxa;
 	int x, y, w, h;
+	int sfx, sfy, sfw, sfh; /* stored float geometry, used on mode revert */
 	int oldx, oldy, oldw, oldh;
 	int basew, baseh, incw, inch, maxw, maxh, minw, minh;
 	int bw, oldbw;
@@ -188,6 +189,7 @@ static void movemouse(const Arg *arg);
 
 //my func..
 static void moveresize(const Arg *arg);
+static void movestack(const Arg *arg);
 
 static Client *nexttiled(Client *c);
 static void pop(Client *);
@@ -868,6 +870,23 @@ focusmon(const Arg *arg)
 	focus(NULL);
 }
 
+static int focusskiptest_r = False;
+int focusskiptest (char *name)
+{
+	if( strcmp(name,"xfce4-panel")==0 )
+	{
+		if (focusskiptest_r) return False;
+		focusskiptest_r=True;
+		return True;
+	}
+	else
+	{
+		focusskiptest_r=False;
+		return False;
+	}
+}
+
+
 void
 focusstack(const Arg *arg)
 {
@@ -889,8 +908,11 @@ focusstack(const Arg *arg)
 					c = i;
 	}
 	if (c) {
-		focus(c);
-		restack(selmon);
+			focus(c);
+			restack(selmon);
+
+			if (focusskiptest(c->name)==1) focusstack(arg);
+			
 	}
 }
 
@@ -1095,6 +1117,15 @@ manage(Window w, XWindowAttributes *wa)
 	updatewindowtype(c);
 	updatesizehints(c);
 	updatewmhints(c);
+
+
+	c->sfx = c->x;
+	c->sfy = c->y;
+	c->sfw = c->w;
+	c->sfh = c->h;
+
+
+
 	XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
 	grabbuttons(c, 0);
 	if (!c->isfloating)
@@ -1800,8 +1831,8 @@ togglefloating(const Arg *arg)
 			selmon->sel->oldbw = selmon->sel->bw;
 			selmon->sel->bw = borderpx;
 		}
-		resize(selmon->sel, selmon->sel->x, selmon->sel->y,
-		       selmon->sel->w - selmon->sel->bw * 2, selmon->sel->h - selmon->sel->bw * 2, 0);
+		resize(selmon->sel, selmon->sel->sfx, selmon->sel->sfy,
+		       selmon->sel->sfw - selmon->sel->bw * 2, selmon->sel->sfh - selmon->sel->bw * 2, 0);
 	}
 	arrange(selmon);
 }
@@ -2292,4 +2323,56 @@ static void moveresize(const Arg *arg)
 		m->sel->h + ((int *)arg->v)[3], True);
 	while(XCheckMaskEvent(dpy, EnterWindowMask, &ev));
 }
+
+
+void
+movestack(const Arg *arg) {
+	Client *c = NULL, *p = NULL, *pc = NULL, *i;
+
+	if(arg->i > 0) {
+		/* find the client after selmon->sel */
+		for(c = selmon->sel->next; c && (!ISVISIBLE(c) || c->isfloating); c = c->next);
+		if(!c)
+			for(c = selmon->clients; c && (!ISVISIBLE(c) || c->isfloating); c = c->next);
+
+	}
+	else {
+		/* find the client before selmon->sel */
+		for(i = selmon->clients; i != selmon->sel; i = i->next)
+			if(ISVISIBLE(i) && !i->isfloating)
+				c = i;
+		if(!c)
+			for(; i; i = i->next)
+				if(ISVISIBLE(i) && !i->isfloating)
+					c = i;
+	}
+	/* find the client before selmon->sel and c */
+	for(i = selmon->clients; i && (!p || !pc); i = i->next) {
+		if(i->next == selmon->sel)
+			p = i;
+		if(i->next == c)
+			pc = i;
+	}
+
+	/* swap c and selmon->sel selmon->clients in the selmon->clients list */
+	if(c && c != selmon->sel) {
+		Client *temp = selmon->sel->next==c?selmon->sel:selmon->sel->next;
+		selmon->sel->next = c->next==selmon->sel?c:c->next;
+		c->next = temp;
+
+		if(p && p != c)
+			p->next = c;
+		if(pc && pc != selmon->sel)
+			pc->next = selmon->sel;
+
+		if(selmon->sel == selmon->clients)
+			selmon->clients = c;
+		else if(c == selmon->clients)
+			selmon->clients = selmon->sel;
+
+		arrange(selmon);
+	}
+}
+
+
 
