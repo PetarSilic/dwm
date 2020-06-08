@@ -1,7 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx  = 7;        /* border pixel of windows */
+static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 0;        /* 0 means no bar */
 static const int topbar             = 0;        /* 0 means bottom bar */
@@ -72,9 +72,8 @@ static const Rule rules[] = {
 	{ "ffplay",				NULL,       NULL,       0,            1,           -1 },
 
 	//notes
-	{ "Wrapper-1.0",		NULL,       NULL,       1,            1,           1 },
-	//{ "Xfce4-panel",		NULL,       NULL,       1<<8,         1,           1 },
-	{ "Xfce4-panel",		NULL,       NULL,       1,            1,           1 },
+	{ "Wrapper-1.0",		NULL,       NULL,       0,            1,           -1 },
+	{ "Xfce4-panel",		NULL,       NULL,       0,            1,           -1 },
 	
 
 	{ "zoom",				NULL,       NULL,       1,            1,           1 },
@@ -105,6 +104,10 @@ static const Layout layouts[] = {
 	{ "[]=",      tile },    /* first entry is default */
 	{ "[M]",      monocle },
 	{ "><>",      NULL },    /* no layout function means floating behavior */
+	{ "|M|",      centeredmaster },
+	{ ">M>",      centeredfloatingmaster },
+	{ "TTT",      bstack },
+	{ "===",      bstackhoriz },
 };
 
 /* key definitions */
@@ -184,11 +187,19 @@ static Key keys[] = {
 	{ MODKEY,             			XK_BackSpace,	killclient,     {0} },
 
 	{ MODKEY,                       XK_t, 			setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_Delete,		setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_KP_Right, 	setlayout,      {.v = &layouts[0]} },
+
+
+	{ MODKEY,                       XK_Delete,		setlayout,      {.v = &layouts[0]} },
+	{ MODKEY|ShiftMask,   			XK_Delete,		setlayout,      {.v = &layouts[3]} },
+
+	{ MODKEY,                       XK_Insert,      setlayout,      {.v = &layouts[5]} },
+	{ MODKEY|ShiftMask,             XK_Insert,      setlayout,      {.v = &layouts[6]} },
+
 	{ MODKEY,                       XK_End,   		setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,             			XK_Page_Down,	setlayout,      {.v = &layouts[2]} },
-	
+
+
 
 //	{ MODKEY,                       XK_space,  		setlayout,      {0} },
 //	{ MODKEY|ShiftMask,             XK_space,  		togglefloating, {0} },
