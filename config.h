@@ -5,8 +5,8 @@ static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 0;        /* 0 means no bar */
 static const int topbar             = 0;        /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=12" };
-static const char dmenufont[]       = "monospace:size=14";
+static const char *fonts[]          = { "Cascadia Code:size=12" };
+static const char dmenufont[]       = "Cascadia Code:size=14";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
@@ -47,9 +47,8 @@ static const Rule rules[] = {
 	{ "vlc",     			NULL,       NULL,       0,            1,           -1 },
 	{ "Vlc",     			NULL,       NULL,       0,            1,           -1 },
 	{ "mpv",     			NULL,       NULL,       0,            1,           -1 },
-
+	{ "GLava",     			NULL,       NULL,       0,            1,           -1 },
 	{ "Gimp",     			NULL,       NULL,       0,            1,           -1 },
-
 	{ "Virtualbox", 		NULL,       NULL,       0,            1,           -1 },
 	{ "feh", 				NULL,       NULL,       0,            1,           -1 },
 	{ "Sxiv", 				NULL,       NULL,       0,            1,           -1 },
@@ -60,37 +59,20 @@ static const Rule rules[] = {
 	{ "VirtualBox Machine",	NULL,       NULL,       0,            1,           -1 },
 	{ "Pavucontrol",		NULL,       NULL,       0,            1,           -1 },
 	{ "Cairo-dock",			NULL,       NULL,       0,            1,           -1 },
-
 	{ "Wrapper-2.0",		NULL,       NULL,       0,            1,           1 },
 	{ "wrapper-2.0",		NULL,       NULL,       0,            1,           1 },
 	{ "Transmission",		NULL,       NULL,       0,            1,           1 },
 	{ "Orage",				NULL,       NULL,       0,            1,           1 },
-	
 	{ "Stfloat",			NULL,       NULL,       0,            1,           -1 },
-
 	{ ".audacity",			NULL,       NULL,       0,            1,           -1 },
 	{ "ffplay",				NULL,       NULL,       0,            1,           -1 },
-
 	//notes
 	{ "Wrapper-1.0",		NULL,       NULL,       0,            1,           -1 },
 	{ "Xfce4-panel",		NULL,       NULL,       0,            1,           -1 },
-	
-
 	{ "zoom",				NULL,       NULL,       1,            1,           1 },
-	
-
 //	{ "Brave-browser",		NULL,       NULL,       1,            1,           1 },
-	
-
-
-
-		{ "AndroidEmulator",		NULL,       NULL,       0,            1,           1 },
-//		{ "Org.gnome.Nautilus",		NULL,       NULL,       0,            1,           1 },
-
-
-
-
-
+	{ "AndroidEmulator",		NULL,       NULL,       0,            1,           1 },
+//	{ "Org.gnome.Nautilus",		NULL,       NULL,       0,            1,           1 },
 	//{ "Firefox",  		NULL,       NULL,       1 << 8,       0,           -1 },
 };
 
@@ -137,7 +119,6 @@ static const char *dmenucmd[] = { "dmenu_run", "-b", "-m", dmenumon, "-fn", dmen
 
 //my dmenu scripts
 static const char *dm_dwmquit[]=	{ "/home/petar/.config/dmenu/dwmquit", NULL };
-static const char *dm_emojis[]=		{ "/home/petar/.config/dmenu/fonts", NULL };
 //static const char *dm_run[]  = 		{ "/home/Petar/.config/dmenu/run", NULL };
 
 //static const char *runchromium[]  = { 	"/usr/bin/chromium", NULL };
@@ -145,79 +126,42 @@ static const char *dm_emojis[]=		{ "/home/petar/.config/dmenu/fonts", NULL };
 //static const char *runopera[]  = { 		"/usr/bin/opera", NULL };
 //static const char *runnautilus[]  = { 	"/usr/bin/nautilus", NULL };
 
-static int layoutcnt=0;
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-//	{ MODKEY,                       XK_o,      		spawn,          {.v = appfinder } },
 	{ MODKEY,                       XK_r,      		spawn,          {.v = dmenucmd } },
-	//{ MODKEY,			            XK_Return,		spawn,          {.v = termcmd } },
-//	{ MODKEY,			            XK_c,			spawn,          {.v = termcmd } },
-//	{ MODKEY,			            XK_C,			spawn,          {.v = termcmdG } },
-//	{ MODKEY,			            XK_e, 			spawn,          {.v = nautilus } },
 //	{ 0,			            	0x1008ff13,		spawn,          {.v = sndup } },
 //	{ 0,			            	0x1008ff11,		spawn,          {.v = snddown } },
 //	{ 0,			            	0x1008ff12,		spawn,          {.v = sndcontrol } },
-//	{ MODKEY,			            XK_F2,			spawn,          {.v = appfinder } },
 	{ MODKEY,             			XK_q,      		spawn,          {.v = dm_dwmquit }}, 
-//	{ MODKEY,             			XK_KP_End,		spawn,          {.v = runchromium }}, 
-//	{ MODKEY,             			XK_KP_Down, 	spawn,          {.v = runfirefox }}, 
-//	{ MODKEY,             			XK_KP_Page_Down,spawn,          {.v = runopera }}, 
-	{ MODKEY,                       XK_f,      		spawn,	        {.v = dm_emojis }  },
-
 	{ MODKEY,                       XK_b,      		togglebar,      {0} },
-
-//	{ MODKEY,                     	XK_Page_Down,  	focusstack,     {.i = +1 } },
 	{ MODKEY,                     	XK_Up,		  	focusstack,     {.i = -1 } },
 	{ MODKEY,                     	XK_Down,		focusstack,     {.i = +1 } },
 	{ MODKEY,                     	XK_Tab,  		focusstack,     {.i = +1 } },
 	{ Mod1Mask,                     XK_Tab,     	focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      		focusstack,     {.i = -1 } },
-//	{ MODKEY,                     	XK_Page_Up,  	focusstack,     {.i = -1 } },
 	{ MODKEY|ShiftMask,            	XK_Tab,  		focusstack,     {.i = -1 } },
-
-	{ MODKEY|ShiftMask,                       XK_KP_Add,		incnmaster,     {.i = +1 } },
-	{ MODKEY|ShiftMask,                       XK_KP_Subtract,	incnmaster,     {.i = -1 } },
-	
 	{ MODKEY,                       XK_Left,   		setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_Right,  		setmfact,       {.f = +0.05} },
 	{ MODKEY,                       XK_s, 			zoom,           {0} },
 	{ MODKEY,                       XK_y,   		view,           {0} },
 	{ MODKEY,             			XK_KP_Page_Up,	killclient,     {0} },
 	{ MODKEY,             			XK_BackSpace,	killclient,     {0} },
-
 	{ MODKEY,                       XK_t, 			setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_KP_Right, 	setlayout,      {.v = &layouts[0]} },
-
-
 	{ MODKEY,                       XK_Delete,		setlayout,      {.v = &layouts[0]} },
 	{ MODKEY|ShiftMask,   			XK_Delete,		setlayout,      {.v = &layouts[3]} },
-
 	{ MODKEY,                       XK_Insert,      setlayout,      {.v = &layouts[5]} },
 	{ MODKEY|ShiftMask,             XK_Insert,      setlayout,      {.v = &layouts[6]} },
-
 	{ MODKEY,                       XK_End,   		setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,             			XK_Page_Down,	setlayout,      {.v = &layouts[2]} },
-
-
-
-//	{ MODKEY,                       XK_space,  		setlayout,      {0} },
-//	{ MODKEY|ShiftMask,             XK_space,  		togglefloating, {0} },
-
-
 	{ MODKEY,             			XK_space,  		togglefloating, {0} },
-//	{ MODKEY,             			XK_space,  		setlayout,      {.v = &layouts[ 1 ]} },
-//	{ MODKEY|ShiftMask,   			XK_space,  		setlayout,      {.v = &layouts[ 0 ]} },
-
-
 	{ MODKEY,                       XK_0,      		view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      		tag,            {.ui = ~0 } },
 	{ MODKEY,                       XK_comma,  		focusmon,       {.i = -1 } },
 	{ MODKEY,                       XK_period, 		focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  		tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, 		tagmon,         {.i = +1 } },
-
-
 	{ MODKEY|ControlMask,			XK_Down,	moveresize,		{.v = (int []){ 0, winmovesize, 0, 0 }}},
 	{ MODKEY|ControlMask,			XK_Up,		moveresize,		{.v = (int []){ 0, -winmovesize, 0, 0 }}},
 	{ MODKEY|ControlMask,			XK_Right,	moveresize,		{.v = (int []){ winmovesize, 0, 0, 0 }}},
@@ -226,11 +170,10 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,				XK_Up,		moveresize,		{.v = (int []){ 0, 0, 0, -winmovesize }}},
 	{ MODKEY|ShiftMask,				XK_Right,	moveresize,		{.v = (int []){ 0, 0, winmovesize, 0 }}},
 	{ MODKEY|ShiftMask,				XK_Left,	moveresize,		{.v = (int []){ 0, 0, -winmovesize, 0 }}},
-
-
-	{ MODKEY,             XK_KP_Subtract,   movestack,      {.i = +1 } },
-	{ MODKEY,             XK_KP_Add,		movestack,      {.i = -1 } },
-
+	{ MODKEY|ControlMask,           XK_Up,		movestack,      {.i = -1 } },
+	{ MODKEY|ControlMask,           XK_Down,	movestack,      {.i = +1 } },
+	{ MODKEY|ShiftMask,   XK_KP_Add,		incnmaster,     {.i = +1 } },
+	{ MODKEY|ShiftMask,   XK_KP_Subtract,  incnmaster,     {.i = -1 } },
 
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
