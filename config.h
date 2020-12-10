@@ -66,15 +66,18 @@ static const Rule rules[] = {
 	{ "Stfloat",			NULL,       NULL,       0,            1,           -1 },
 	{ ".audacity",			NULL,       NULL,       0,            1,           -1 },
 	{ "ffplay",				NULL,       NULL,       0,            1,           -1 },
-	//notes
+	//xfce4 notes
 	{ "Wrapper-1.0",		NULL,       NULL,       0,            1,           -1 },
 	{ "Xfce4-panel",		NULL,       NULL,       0,            1,           -1 },
 	{ "zoom",				NULL,       NULL,       1,            1,           1 },
 //	{ "Brave-browser",		NULL,       NULL,       1,            1,           1 },
 	{ "AndroidEmulator",		NULL,       NULL,       0,            1,           1 },
-//	{ "Org.gnome.Nautilus",		NULL,       NULL,       0,            1,           1 },
+	{ "Org.gnome.Nautilus",		NULL,       NULL,       0,            1,           1 },
+	{ "Org.gnome.clocks",		NULL,       NULL,       0,            1,           1 },
 	//{ "Firefox",  		NULL,       NULL,       1 << 8,       0,           -1 },
+	{ "Thunderbird",  		NULL,       NULL,       1 << 2,       0,           -1 },
 };
+
 
 /* layout(s) */
 static const float mfact     = 0.35; /* factor of master area size [0.05..0.95] */
@@ -106,33 +109,12 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-b", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-//static const char *termcmd[]  = { "st", NULL };
-//static const char *termcmdG[]  = { "gnome-terminal", NULL };
-//static const char *termcmd[]  = { "st", NULL };
-//static const char *termcmd[]  = { "st", NULL };
-//static const char *sndup[]  = 		{ "/home/Petar/code/scripts/snd/up", NULL };
-//static const char *snddown[]  = 	{ "/home/Petar/code/scripts/snd/down", NULL };
-//static const char *sndcontrol[]  = 	{ "/usr/bin/pavucontrol", NULL };
-//static const char *nautilus[]  = 	{ "/usr/bin/nautilus", NULL };
-//static const char *appfinder[]  = 	{ "/usr/bin/xfce4-appfinder", NULL };
-
-
-//my dmenu scripts
 static const char *dm_dwmquit[]=	{ "/home/petar/.config/dmenu/dwmquit", NULL };
-//static const char *dm_run[]  = 		{ "/home/Petar/.config/dmenu/run", NULL };
-
-//static const char *runchromium[]  = { 	"/usr/bin/chromium", NULL };
-//static const char *runfirefox[]  = { 	"/usr/bin/firefox","-P", "default", NULL };
-//static const char *runopera[]  = { 		"/usr/bin/opera", NULL };
-//static const char *runnautilus[]  = { 	"/usr/bin/nautilus", NULL };
-
+//static const char some_cmd[]  = { "echo hi!", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_r,      		spawn,          {.v = dmenucmd } },
-//	{ 0,			            	0x1008ff13,		spawn,          {.v = sndup } },
-//	{ 0,			            	0x1008ff11,		spawn,          {.v = snddown } },
-//	{ 0,			            	0x1008ff12,		spawn,          {.v = sndcontrol } },
 	{ MODKEY,             			XK_q,      		spawn,          {.v = dm_dwmquit }}, 
 	{ MODKEY,                       XK_b,      		togglebar,      {0} },
 	{ MODKEY,                     	XK_Up,		  	focusstack,     {.i = -1 } },
@@ -170,10 +152,13 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,				XK_Up,		moveresize,		{.v = (int []){ 0, 0, 0, -winmovesize }}},
 	{ MODKEY|ShiftMask,				XK_Right,	moveresize,		{.v = (int []){ 0, 0, winmovesize, 0 }}},
 	{ MODKEY|ShiftMask,				XK_Left,	moveresize,		{.v = (int []){ 0, 0, -winmovesize, 0 }}},
+	{ MODKEY,						XK_KP_Add,	movestack,      {.i = -1 } },
+	{ MODKEY,						XK_KP_Subtract,	movestack,      {.i = +1 } },
 	{ MODKEY|ControlMask,           XK_Up,		movestack,      {.i = -1 } },
 	{ MODKEY|ControlMask,           XK_Down,	movestack,      {.i = +1 } },
 	{ MODKEY|ShiftMask,   XK_KP_Add,		incnmaster,     {.i = +1 } },
 	{ MODKEY|ShiftMask,   XK_KP_Subtract,  incnmaster,     {.i = -1 } },
+
 
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
@@ -193,7 +178,6 @@ static Button buttons[] = {
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
-//	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
